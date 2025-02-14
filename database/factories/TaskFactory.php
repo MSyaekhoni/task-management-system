@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class TaskFactory extends Factory
     {
         return [
             'title' => fake()->sentence(3),
-            'creator' => fake()->name(),
+            'creator_id' => User::factory(),
             'description' => fake()->text(),
             'category' => fake()->randomElement(['Work', 'Personal', 'Learning']),
             'priority' => fake()->randomElement(['Low', 'Medium', 'High']),

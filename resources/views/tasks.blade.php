@@ -55,25 +55,25 @@
                 <tr
                     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                        {{ $task['title'] }}
+                        {{ $task->title }}
                     </th>
                     <td class="px-6 py-4">
-                        {{ $task['creator'] }}
+                        {{ $task->creator->name }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ Str::limit($task['description'], 80) }}
+                        {{ Str::limit($task->description, 80) }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $task['category'] }}
+                        {{ $task->category }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $task['priority'] }}
+                        {{ $task->priority }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $task['status'] }}
+                        {{ $task->status }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ \Carbon\Carbon::parse($task['due_date'])->format('d M Y, H:i') }}
+                        {{ Carbon\Carbon::parse($task->due_date)->format('d M Y, H:i') }}
                     </td>
                     <td class="px-6 py-4 text-right">
                         <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
