@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Task;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -7,7 +8,7 @@ Route::get('/', function () {
 });
 
 Route::get('/tasks', function () {
-    return view('tasks');
+    return view('tasks', ['tasks' => Task::latest()->paginate(5)]);
 });
 
 Route::get('/messages', function () {
