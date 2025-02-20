@@ -3,9 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\Task;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\User;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\StatusTask;
 use Illuminate\Database\Seeder;
+use Database\Seeders\StatusTaskSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,8 +16,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Task::factory(10)->recycle(
-            User::factory(3)->create()
-        )->create();
+        $this->call([StatusTaskSeeder::class]);
+
+        $admin = User::create([
+            'name' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('password123')
+        ]);
+
+        Task::factory(10)->recycle([
+            StatusTask::all(),
+            User::factory(3)->create(),
+            $admin,
+        ])->create();
     }
 }

@@ -3,25 +3,30 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
+use App\Models\StatusTask;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function index()
     {
-        return view('tasks.index', ['tasks' => Task::latest()->paginate(5)]);
+        $tasks = Task::latest()->paginate(5);
+
+        return view('tasks.index', compact('tasks'));
     }
 
     public function create()
     {
-        return view('tasks.create', ['creators' => User::get()]);
+        $statuses = StatusTask::all();
+
+        return view('tasks.create', compact('statuses'));
     }
 
     public function store(TaskRequest $request)
     {
-        Task::create($request->validated());
+        Task::create(array_merge($request->validated(), ['creator_id' => Auth::id()]));
 
         return redirect()->route('tasks.index')->with('success', 'New task added successfully!');
     }
@@ -29,9 +34,9 @@ class TaskController extends Controller
     public function edit($id)
     {
         $task = Task::findOrFail($id);
-        $creators = User::get();
+        $statuses = StatusTask::all();
 
-        return view('tasks.edit', compact('task', 'creators'));
+        return view('tasks.edit', compact('task', 'statuses'));
     }
 
     public function update(TaskRequest $request, $id)

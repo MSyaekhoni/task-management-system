@@ -14,6 +14,15 @@ class TaskRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        if ($this->has('due_date')) {
+            $this->merge([
+                'due_date' => date('Y-m-d H:i:s', strtotime($this->due_date))
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -21,14 +30,21 @@ class TaskRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'title'       => 'required|string|max:255|not_regex:/^\s*$/',
             'category'    => 'required|string|max:100',
-            'creator_id'  => 'required|integer',
             'description' => 'required|string|max:1000',
-            'due_date'    => 'required|date|after_or_equal:today',
             'priority'    => 'required|in:Low,Medium,High',
-            'status'      => 'required|in:Pending,In Progress,Completed',
+            'status_id'      => 'required|exists:status_tasks,id',
         ];
+
+        // jika method post maka validasi due_date dijalankan, jika put/patch tidak usah dijalankan
+        if ($this->isMethod('post')) {
+            $rules['due_date']    = 'required|date|after_or_equal:today';
+        } else {
+            $rules['due_date']    = 'required|date';
+        }
+
+        return $rules;
     }
 }

@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Task;
 use App\Models\User;
+use App\Models\StatusTask;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,14 +20,24 @@ class TaskFactory extends Factory
      */
     public function definition(): array
     {
+        $title = fake()->sentence(3);
+
         return [
-            'title' => fake()->sentence(3),
+            'title' => $title,
+            'slug' => $this->generateUniqueSlug($title),
             'creator_id' => User::factory(),
             'description' => fake()->text(),
             'category' => fake()->randomElement(['Work', 'Personal', 'Learning']),
             'priority' => fake()->randomElement(['Low', 'Medium', 'High']),
-            'status' => fake()->randomElement(['Pending', 'In Progress', 'Completed']),
+            'status_id' => StatusTask::factory(),
             'due_date' => fake()->dateTimeBetween('now', '+1 month')
         ];
+    }
+
+    private function generateUniqueSlug($title)
+    {
+        $slug = Str::slug($title);
+        $count = Task::where('slug', 'LIKE', "{$slug}%")->count();
+        return $count ? "{$slug}-" . ($count + 1) : $slug;
     }
 }

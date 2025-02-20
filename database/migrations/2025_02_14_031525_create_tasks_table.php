@@ -14,14 +14,18 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->foreignId('creator_id')->constrained(
                 table: 'users',
-                indexName: 'posts_creator_id'
+                indexName: 'tasks_creator_id'
             );
             $table->text('description');
             $table->string('category');
             $table->enum('priority', ['Low', 'Medium', 'High'])->default('Medium');
-            $table->enum('status', ['Pending', 'In Progress', 'Completed'])->default('Pending');
+            $table->foreignId('status_id')->constrained(
+                table: 'status_tasks',
+                indexName: 'status_task_id'
+            );
             $table->dateTime('due_date');
             $table->timestamps();
         });
