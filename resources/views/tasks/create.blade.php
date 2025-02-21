@@ -14,8 +14,8 @@
     <div class="relative shadow py-4 sm:rounded-lg dark:shadow-gray-800 bg-white dark:bg-gray-800">
         <form class="max-w-full mx-6" action="{{ route('tasks.store') }}" method="POST">
             @csrf
-            <div class="flex flex-wrap justify-between">
-                <div class="relative w-full md:max-w-lg space-y-5">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="relative w-full space-y-5">
                     {{-- Title --}}
                     <div>
                         <x-input-label for="title" :value="__('Title')" />
@@ -39,11 +39,15 @@
                         <x-input-error class="mt-2" :messages="$errors->get('description')" />
                     </div>
                 </div>
-                <div class="relative w-full md:max-w-lg space-y-5">
+                <div class="relative w-full space-y-5">
                     {{-- Due Date --}}
                     <div>
                         <x-input-label for="due_date" :value="__('Due Date')" />
-                        <div class="relative mt-1">
+                        <input type="datetime-local" id="due_date" name="due_date"
+                            class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-[#3e35d4] focus:border-[#3e35d4] block w-full p-2.5 mt-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-[#3e35d4] dark:focus:border-[#3e35d4]"
+                            value="{{ old('due_date') }}" required>
+
+                        {{-- <div class="relative mt-1">
                             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -56,7 +60,7 @@
                                 datepicker-autoselect-today type="text"
                                 class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-[#3e35d4] focus:border-[#3e35d4] block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-[#3e35d4] dark:focus:border-[#3e35d4]"
                                 placeholder="Select date" autocomplete="off" required>
-                        </div>
+                        </div> --}}
                         <x-input-error class="mt-2" :messages="$errors->get('due_date')" />
                     </div>
                     {{-- Priority --}}

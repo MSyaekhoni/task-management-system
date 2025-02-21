@@ -14,14 +14,15 @@ class TaskRequest extends FormRequest
         return true;
     }
 
-    public function prepareForValidation()
-    {
-        if ($this->has('due_date')) {
-            $this->merge([
-                'due_date' => date('Y-m-d H:i:s', strtotime($this->due_date))
-            ]);
-        }
-    }
+    // Mengubah inputan due_date dari string ke format timestamp (Mengubah format inputan sesuai format Database)
+    // public function prepareForValidation()
+    // {
+    //     if ($this->has('due_date')) {
+    //         $this->merge([
+    //             'due_date' => date('Y-m-d H:i:s', strtotime($this->due_date))
+    //         ]);
+    //     }
+    // }
 
     /**
      * Get the validation rules that apply to the request.
