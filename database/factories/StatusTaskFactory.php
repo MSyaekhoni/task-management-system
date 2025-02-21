@@ -19,6 +19,7 @@ class StatusTaskFactory extends Factory
         return [
             'name' => fake()->randomElement(['Pending', 'In Progress', 'Completed']),
             'slug' => fake()->unique()->randomElement(['pending', 'in-progress', 'completed']),
+            'color' => fake()->randomElement(['yellow', 'blue', 'greeen'])
         ];
     }
 }

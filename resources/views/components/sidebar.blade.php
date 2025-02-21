@@ -2,7 +2,7 @@
     class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
     aria-label="Sidenav" id="drawer-navigation">
     <div class="overflow-y-auto py-5 px-4 md:px-6 h-full bg-white dark:bg-gray-800">
-        <form action="#" method="GET" class="md:hidden mb-2">
+        <form action="{{ route('tasks.index') }}" method="GET" class="md:hidden mb-2">
             <label for="sidebar-search" class="sr-only">Search</label>
             <div class="relative">
                 <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -15,7 +15,7 @@
                 </div>
                 <input type="text" name="search" id="sidebar-search"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#3e35d4] focus:border-[#3e35d4] block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#3e35d4] dark:focus:border-[#3e35d4]"
-                    placeholder="Search" autocomplete="off" />
+                    placeholder="Search" autocomplete="off" value="{{ request('search') }}" />
             </div>
         </form>
         <x-sidelink href="/dashboard" :active="request()->is('dashboard')">

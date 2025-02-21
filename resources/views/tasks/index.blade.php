@@ -5,35 +5,25 @@
 
     <x-header-task>
         <x-slot:header>
-            @if (session('success'))
-            <div id="alert-success"
-                class="flex items-center px-2 py-1 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50"
-                role="alert">
-                <svg class="shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                </svg>
-                <span class="sr-only">Info</span>
-                <div>
-                    <span class="font-medium">{{ session('success') }}</span>
-                </div>
-            </div>
-            @endif
-            <span id="page-title" class="text-xl font-bold text-left dark:text-gray-50">
-                {{ session('success') ? '' : 'All Tasks' }}
+            <span class="text-xl font-bold text-left dark:text-gray-50">
+                @if(request('status') == 'ongoing') On Going Tasks
+                @elseif(request('status') == 'completed') Completed Tasks
+                @elseif(request('status') == 'overdue') Overdue Tasks
+                @elseif(request()->has('search')) Search results for "{{ request('search') }}"
+                @else All Tasks
+                @endif
             </span>
-            <script>
-                setTimeout(() => {
-                    let alertBox = document.getElementById('alert-success');
-                    if (alertBox) {
-                        alertBox.style.display = 'none'; // Sembunyikan alert
-                    }
-                    // Tampilkan kembali title "All Tasks"
-                    document.getElementById('page-title').innerText = "All Tasks";
-                }, 3000); // 3 detik
-            </script>
         </x-slot:header>
+
+        <x-slot:alert>
+            @if (session()->has('success'))
+            <x-alert>
+                <x-slot:status>
+                    {{ session('success') }}
+                </x-slot:status>
+            </x-alert>
+            @endif
+        </x-slot:alert>
 
         <x-primary-link-button href="{{ route('tasks.create') }}">
             {{ __('Add new task') }}
@@ -71,7 +61,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($tasks as $task)
+                @forelse ($tasks as $task)
                 <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
                         {{ $task->title }}
@@ -88,8 +78,11 @@
                     <td class="px-6 py-4">
                         {{ $task->priority }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        {{ $task->status->name }}
+                    <td class="px-6 py-4 whitespace-nowrap flex items-center gap-2">
+                        <span class="bg-{{ $task->status->color }}-500 w-3 h-3 rounded-full block"></span>
+                        <span class="block">
+                            {{ $task->status->name }}
+                        </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span class="block">
@@ -125,7 +118,16 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="7" class="text-center py-4">
+                        <p class="font-medium text-base mb-4">Task not found!</p>
+                        <x-secondary-link-button href="{{ route('tasks.index') }}">
+                            {{ __('Back to All Tasks') }}
+                        </x-secondary-link-button>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
         <div class="my-4 mx-6">

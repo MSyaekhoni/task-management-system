@@ -26,7 +26,7 @@
             </a>
         </div>
         <div class="md:w-2/5 lg:1/2">
-            <form action="#" method="GET" class="hidden md:block md:pl-2">
+            <form action="{{ route('tasks.index') }}" method="GET" class="hidden md:block md:pl-2">
                 <label for="topbar-search" class="sr-only">Search</label>
                 <div class="relative md:w-full ">
                     <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -37,9 +37,9 @@
                             </path>
                         </svg>
                     </div>
-                    <input type="text" name="email" id="topbar-search"
+                    <input type="text" name="search" id="topbar-search"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#3e35d4] focus:border-[#3e35d4] block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-[#3e35d4] dark:focus:border-[#3e35d4]"
-                        placeholder="Search" autocomplete="off" />
+                        placeholder="Search" autocomplete="off" value="{{ request('search') }}" />
                 </div>
             </form>
         </div>

@@ -7,20 +7,31 @@
             <h3 class="text-xl font-semibold dark:text-gray-50">Tasks Summary</h3>
             <canvas id="taskSummaryChart" width="auto" height="auto"></canvas>
         </div>
-        <div class="w-full grid grid-rows-3 space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 items-center w-full rounded-lg p-4 h-auto shadow bg-[#f39c12]">
-                <h3 class="text-xl font-semibold text-white">On Going Tasks</h3>
-                <span class="text-5xl mr-4 font-extrabold text-white text-left md:text-right">{{ $ongoingTasks}}</span>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 items-center w-full rounded-lg p-4 h-auto shadow bg-[#2ecc71]">
-                <h3 class="text-xl font-semibold text-white">Completed Tasks</h3>
-                <span class="text-5xl mr-4 font-extrabold text-white text-left md:text-right">{{
-                    $completedTasks}}</span>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 items-center w-full rounded-lg p-4 h-auto shadow bg-[#e74c3c]">
-                <h3 class="text-xl font-semibold text-white">Overdue Tasks</h3>
-                <span class="text-5xl mr-4 font-extrabold text-white text-left md:text-right">{{ $overdueTasks}}</span>
-            </div>
+        <div class="w-full grid grid-rows-3 gap-y-4">
+            <a href="{{ route('tasks.index', ['status' => 'ongoing']) }}">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 items-center w-full rounded-lg p-4 h-full shadow bg-[#f39c12]">
+                    <h3 class="text-xl font-semibold text-white">On Going Tasks</h3>
+                    <span class="text-5xl mr-4 font-extrabold text-white text-left md:text-right">{{
+                        $ongoingTasks}}</span>
+                </div>
+            </a>
+            <a href="{{ route('tasks.index', ['status' => 'completed']) }}">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 items-center w-full rounded-lg p-4 h-full shadow bg-[#2ecc71]">
+                    <h3 class="text-xl font-semibold text-white">Completed Tasks</h3>
+                    <span class="text-5xl mr-4 font-extrabold text-white text-left md:text-right">{{
+                        $completedTasks}}</span>
+                </div>
+            </a>
+            <a href="{{ route('tasks.index', ['status' => 'overdue']) }}">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-2 items-center w-full rounded-lg p-4 h-full shadow bg-[#e74c3c]">
+                    <h3 class="text-xl font-semibold text-white">Overdue Tasks</h3>
+                    <span class="text-5xl mr-4 font-extrabold text-white text-left md:text-right">{{
+                        $overdueTasks}}</span>
+                </div>
+            </a>
         </div>
     </div>
 

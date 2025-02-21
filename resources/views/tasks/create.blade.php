@@ -5,8 +5,8 @@
 
     <x-header-task>
         <x-slot:header>
-            <span id="page-title" class="text-xl font-bold text-left dark:text-gray-50">
-                Create New Task
+            <span class="text-xl font-bold text-left dark:text-gray-50">
+                {{ __('Create New Task') }}
             </span>
         </x-slot:header>
     </x-header-task>

@@ -5,7 +5,7 @@
     <div>
         <x-header-task>
             <x-slot:header>
-                <span id="page-title" class="text-xl font-bold text-left dark:text-gray-50">
+                <span class="text-xl font-bold text-left dark:text-gray-50">
                     Edit Task {{ $task->title }}
                 </span>
             </x-slot:header>

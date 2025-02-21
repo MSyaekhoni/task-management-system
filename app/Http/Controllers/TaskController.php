@@ -10,9 +10,38 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $tasks = Task::latest()->paginate(5);
+        $query = Task::query();
+
+        // filter berdasarkan search
+        if ($request->has('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where('title', 'like', $searchTerm)
+                ->orWhere('description', 'like', $searchTerm)
+                ->orWhere('category', 'like', $searchTerm)
+                ->orWhereHas('status', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', $searchTerm);
+                });
+        }
+
+        // filter berdasarkan status yang dikirim dari dashboard
+        if ($request->has('status')) {
+            switch ($request->status) {
+                case 'ongoing':
+                    $query->whereIn('status_id', [1, 2]);
+                    break;
+                case 'completed':
+                    $query->where('status_id', 3);
+                    break;
+                case 'overdue':
+                    $query->where('status_id', '!=', [3])
+                        ->where('due_date', '<', now());
+                    break;
+            }
+        }
+
+        $tasks = $query->latest()->paginate(5)->withQueryString();
 
         return view('tasks.index', compact('tasks'));
     }

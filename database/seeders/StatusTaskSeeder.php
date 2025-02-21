@@ -15,15 +15,18 @@ class StatusTaskSeeder extends Seeder
     {
         StatusTask::create([
             'name' => 'Pending',
-            'slug' => 'pending'
+            'slug' => 'pending',
+            'color' => 'yellow'
         ]);
         StatusTask::create([
             'name' => 'In Progress',
-            'slug' => 'in-progress'
+            'slug' => 'in-progress',
+            'color' => 'blue'
         ]);
         StatusTask::create([
             'name' => 'Completed',
-            'slug' => 'completed'
+            'slug' => 'completed',
+            'color' => 'green'
         ]);
     }
 }
