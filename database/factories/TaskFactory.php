@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\CategoryTask;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\StatusTask;
@@ -27,7 +28,7 @@ class TaskFactory extends Factory
             'slug' => $this->generateUniqueSlug($title),
             'creator_id' => User::factory(),
             'description' => fake()->text(),
-            'category' => fake()->randomElement(['Work', 'Personal', 'Learning']),
+            'category_id' => CategoryTask::factory(),
             'priority' => fake()->randomElement(['Low', 'Medium', 'High']),
             'status_id' => StatusTask::factory(),
             'due_date' => fake()->dateTimeBetween('now', '+1 month')

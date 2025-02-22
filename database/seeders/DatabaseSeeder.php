@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CategoryTask;
 use App\Models\Task;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,9 +26,10 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Task::factory(10)->recycle([
-            StatusTask::all(),
             User::factory(3)->create(),
             $admin,
+            CategoryTask::factory(4)->create(),
+            StatusTask::all(),
         ])->create();
     }
 }

@@ -20,7 +20,10 @@ return new class extends Migration
                 indexName: 'tasks_creator_id'
             );
             $table->text('description');
-            $table->string('category');
+            $table->foreignId('category_id')->constrained(
+                table: 'category_tasks',
+                indexName: 'category_task_id'
+            );
             $table->enum('priority', ['Low', 'Medium', 'High'])->default('Medium');
             $table->foreignId('status_id')->constrained(
                 table: 'status_tasks',

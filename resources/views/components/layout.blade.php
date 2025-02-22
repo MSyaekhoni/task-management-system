@@ -8,6 +8,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @vite(['resources/css/app.css','resources/js/app.js'])
     <link rel="icon" type="png" href="/img/profile.png">
+
+    {{-- Input Select2 --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+
+    {{ $styles ?? '' }}
+
     <title>{{ $title }}</title>
 </head>
 
@@ -21,6 +27,44 @@
             {{ $slot }}
         </main>
     </div>
+
+    {{-- Select2 --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+
+    {{ $scripts ?? '' }}
+
+    {{-- Darkmode --}}
+    <script>
+        const themeToggle = document.getElementById("theme-toggle");
+        const lightIcon = document.getElementById("theme-toggle-light");
+        const darkIcon = document.getElementById("theme-toggle-dark");
+    
+        // Cek apakah user sudah menyimpan preferensi tema
+        if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark");
+            darkIcon.classList.add("hidden");
+            lightIcon.classList.remove("hidden");
+        } else {
+            document.documentElement.classList.remove("dark");
+            lightIcon.classList.add("hidden");
+            darkIcon.classList.remove("hidden");
+        }
+            
+        // Toggle dark mode saat tombol ditekan
+        themeToggle.addEventListener("click", () => {
+            document.documentElement.classList.toggle("dark");
+            if (document.documentElement.classList.contains("dark")) {
+                localStorage.setItem("theme", "dark");
+                darkIcon.classList.add("hidden");
+                lightIcon.classList.remove("hidden");
+            } else {
+                localStorage.setItem("theme", "light");
+                lightIcon.classList.add("hidden");
+                darkIcon.classList.remove("hidden");
+            }
+        });
+    </script>
 </body>
 
 </html>

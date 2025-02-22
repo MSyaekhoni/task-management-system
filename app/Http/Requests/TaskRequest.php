@@ -33,7 +33,7 @@ class TaskRequest extends FormRequest
     {
         $rules = [
             'title'       => 'required|string|max:255|not_regex:/^\s*$/',
-            'category'    => 'required|string|max:100',
+            'category_id'    => 'required|string|max:100',
             'description' => 'required|string|max:1000',
             'priority'    => 'required|in:Low,Medium,High',
             'status_id'      => 'required|exists:status_tasks,id',

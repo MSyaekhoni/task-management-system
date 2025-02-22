@@ -73,7 +73,7 @@
                         {{ Str::limit($task->description, 80) }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $task->category }}
+                        {{ $task->category->name }}
                     </td>
                     <td class="px-6 py-4">
                         {{ $task->priority }}

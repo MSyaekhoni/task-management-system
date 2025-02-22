@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Models\StatusTask;
+use Illuminate\Support\Str;
+use App\Models\CategoryTask;
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
-use App\Models\StatusTask;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
@@ -19,7 +21,9 @@ class TaskController extends Controller
             $searchTerm = '%' . $request->search . '%';
             $query->where('title', 'like', $searchTerm)
                 ->orWhere('description', 'like', $searchTerm)
-                ->orWhere('category', 'like', $searchTerm)
+                ->orWhereHas('category', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', $searchTerm);
+                })
                 ->orWhereHas('status', function ($q) use ($searchTerm) {
                     $q->where('name', 'like', $searchTerm);
                 });
@@ -48,14 +52,24 @@ class TaskController extends Controller
 
     public function create()
     {
+        $categories = CategoryTask::all();
         $statuses = StatusTask::all();
 
-        return view('tasks.create', compact('statuses'));
+        return view('tasks.create', compact('statuses', 'categories'));
     }
 
     public function store(TaskRequest $request)
     {
-        Task::create(array_merge($request->validated(), ['creator_id' => Auth::id()]));
+        // Cari atau buat kategori baru
+        $category = CategoryTask::firstOrCreate(['name' => $request->category_id]);
+
+        Task::create(array_merge(
+            $request->validated(),
+            [
+                'creator_id' => Auth::id(),
+                'category_id' => $category->id
+            ]
+        ));
 
         return redirect()->route('tasks.index')->with('success', 'New task added successfully!');
     }
@@ -63,15 +77,31 @@ class TaskController extends Controller
     public function edit($id)
     {
         $task = Task::findOrFail($id);
+        $categories = CategoryTask::all();
         $statuses = StatusTask::all();
 
-        return view('tasks.edit', compact('task', 'statuses'));
+        return view('tasks.edit', compact('task', 'categories', 'statuses'));
     }
 
-    public function update(TaskRequest $request, $id)
+    public function update(TaskRequest $request, Task $task)
     {
-        $task = Task::findOrFail($id);
-        $task->update($request->validated());
+        // Normalisasi nama kategori untuk pencarian yang lebih fleksibel
+        $normalizedCategoryName = Str::lower(trim($request->category_id));
+
+        // Coba cari kategori yang mirip
+        $category = CategoryTask::whereRaw('LOWER(name) LIKE ?', ["%{$normalizedCategoryName}%"])->first();
+
+        // Jika tidak ditemukan, buat kategori baru
+        if (!$category) {
+            $category = CategoryTask::create(['name' => ucfirst($normalizedCategoryName)]);
+        }
+        $task->update(array_merge(
+            $request->validated(),
+            [
+                'creator_id' => Auth::id(),
+                'category_id' => $category->id
+            ]
+        ));
 
         return redirect()->route('tasks.index')->with('success', "$task->title Task updated successfully!");
     }
