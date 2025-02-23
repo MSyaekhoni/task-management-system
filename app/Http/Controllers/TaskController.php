@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\CategoryTask;
 use Illuminate\Http\Request;
 use App\Http\Requests\TaskRequest;
+use App\Models\PriorityTask;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
@@ -39,7 +40,7 @@ class TaskController extends Controller
                     $query->where('status_id', 3);
                     break;
                 case 'overdue':
-                    $query->where('status_id', '!=', [3])
+                    $query->where('status_id', '!=', 3)
                         ->where('due_date', '<', now());
                     break;
             }
@@ -53,9 +54,10 @@ class TaskController extends Controller
     public function create()
     {
         $categories = CategoryTask::all();
+        $priorities = PriorityTask::all();
         $statuses = StatusTask::all();
 
-        return view('tasks.create', compact('statuses', 'categories'));
+        return view('tasks.create', compact('statuses', 'categories', 'priorities'));
     }
 
     public function store(TaskRequest $request)
@@ -78,9 +80,10 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
         $categories = CategoryTask::all();
+        $priorities = PriorityTask::all();
         $statuses = StatusTask::all();
 
-        return view('tasks.edit', compact('task', 'categories', 'statuses'));
+        return view('tasks.edit', compact('task', 'categories', 'priorities', 'statuses'));
     }
 
     public function update(TaskRequest $request, Task $task)

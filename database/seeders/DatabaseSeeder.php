@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CategoryTask;
+use App\Models\PriorityTask;
 use App\Models\Task;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,6 +18,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([PriorityTaskSeeder::class]);
         $this->call([StatusTaskSeeder::class]);
 
         $admin = User::create([
@@ -29,6 +31,7 @@ class DatabaseSeeder extends Seeder
             User::factory(3)->create(),
             $admin,
             CategoryTask::factory(4)->create(),
+            PriorityTask::all(),
             StatusTask::all(),
         ])->create();
     }

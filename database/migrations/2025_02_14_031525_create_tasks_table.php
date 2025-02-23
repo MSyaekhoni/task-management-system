@@ -24,7 +24,10 @@ return new class extends Migration
                 table: 'category_tasks',
                 indexName: 'category_task_id'
             );
-            $table->enum('priority', ['Low', 'Medium', 'High'])->default('Medium');
+            $table->foreignId('priority_id')->constrained(
+                table: 'priority_tasks',
+                indexName: 'priority_task_id'
+            );
             $table->foreignId('status_id')->constrained(
                 table: 'status_tasks',
                 indexName: 'status_task_id'

@@ -75,8 +75,11 @@
                     <td class="px-6 py-4">
                         {{ $task->category->name }}
                     </td>
-                    <td class="px-6 py-4">
-                        {{ $task->priority }}
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span
+                            class="bg-{{ $task->priority->color }}-500 rounded-md block w-16 text-center text-white font-medium">
+                            {{ $task->priority->name }}
+                        </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                         <span class="bg-{{ $task->status->color }}-500 w-3 h-3 rounded-full block"></span>

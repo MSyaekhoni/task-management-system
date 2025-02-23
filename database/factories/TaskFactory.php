@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\CategoryTask;
+use App\Models\PriorityTask;
 use App\Models\Task;
 use App\Models\User;
 use App\Models\StatusTask;
@@ -29,7 +30,7 @@ class TaskFactory extends Factory
             'creator_id' => User::factory(),
             'description' => fake()->text(),
             'category_id' => CategoryTask::factory(),
-            'priority' => fake()->randomElement(['Low', 'Medium', 'High']),
+            'priority_id' => PriorityTask::factory(),
             'status_id' => StatusTask::factory(),
             'due_date' => fake()->dateTimeBetween('now', '+1 month')
         ];

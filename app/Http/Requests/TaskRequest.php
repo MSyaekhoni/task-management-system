@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TaskRequest extends FormRequest
@@ -14,15 +15,16 @@ class TaskRequest extends FormRequest
         return true;
     }
 
-    // Mengubah inputan due_date dari string ke format timestamp (Mengubah format inputan sesuai format Database)
-    // public function prepareForValidation()
-    // {
-    //     if ($this->has('due_date')) {
-    //         $this->merge([
-    //             'due_date' => date('Y-m-d H:i:s', strtotime($this->due_date))
-    //         ]);
-    //     }
-    // }
+    public function prepareForValidation()
+    {
+        // Konversi `due_date` ke format yang benar
+        if ($this->has('due_date')) {
+            $this->merge([
+                'due_date' => Carbon::parse($this->due_date)->format('Y-m-d H:i:s')
+            ]);
+        }
+    }
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -35,7 +37,7 @@ class TaskRequest extends FormRequest
             'title'       => 'required|string|max:255|not_regex:/^\s*$/',
             'category_id'    => 'required|string|max:100',
             'description' => 'required|string|max:1000',
-            'priority'    => 'required|in:Low,Medium,High',
+            'priority_id'    => 'required|exists:priority_tasks,id',
             'status_id'      => 'required|exists:status_tasks,id',
         ];
 

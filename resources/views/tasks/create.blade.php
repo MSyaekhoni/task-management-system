@@ -72,14 +72,17 @@
                     </div>
                     {{-- Priority --}}
                     <div>
-                        <x-input-label for="priority" :value="__('Priority')" />
-                        <select id="priority" name="priority" required
+                        <x-input-label for="priority_id" :value="__('Priority')" />
+                        <select id="priority_id" name="priority_id" required
                             class="bg-gray-50 border border-gray-200 text-gray-900 text-sm rounded-lg focus:ring-[#3e35d4] focus:border-[#3e35d4] block w-full p-2.5 mt-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-50 dark:focus:ring-[#3e35d4] dark:focus:border-[#3e35d4]">
-                            <option value="" disabled {{ old('priority')==null ? 'selected' : '' }}>Choose a
-                                priority</option>
-                            <option value="Low" {{ old('priority')=='Low' ? 'selected' : '' }}>Low</option>
-                            <option value="Medium" {{ old('priority')=='Medium' ? 'selected' : '' }}>Medium</option>
-                            <option value="High" {{ old('priority')=='High' ? 'selected' : '' }}>High</option>
+                            <option value="" disabled {{ old('priority_id')==null ? 'selected' : '' }}>Choose a priority
+                            </option>
+                            @foreach ($priorities as $priority)
+                            <option value="{{ $priority->id }}" {{ old('priority_id')==$priority->id ? 'selected'
+                                : '' }}>
+                                {{ $priority->name }}
+                            </option>
+                            @endforeach
                         </select>
                         <x-input-error class="mt-2" :messages="$errors->get('priority')" />
                     </div>
