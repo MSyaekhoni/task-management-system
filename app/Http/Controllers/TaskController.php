@@ -82,6 +82,13 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'New task added successfully!');
     }
 
+    public function show($id)
+    {
+        $task = Task::findOrFail($id);
+
+        return view('tasks.show', compact('task'));
+    }
+
     public function edit($id)
     {
         $task = Task::findOrFail($id);

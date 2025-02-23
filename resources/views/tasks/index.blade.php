@@ -64,16 +64,16 @@
                 @forelse ($tasks as $task)
                 <tr class="bg-white dark:bg-gray-800 border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 dark:text-white">
-                        {{ $task->title }}
+                        {{ Str::limit($task->title, 55) }}
                     </th>
                     <td class="px-6 py-4">
-                        {{ $task->creator->name }}
+                        {{ Str::limit($task->creator->name, 55) }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ Str::limit($task->description, 80) }}
+                        {{ Str::limit($task->description, 55) }}
                     </td>
                     <td class="px-6 py-4">
-                        {{ $task->category->name }}
+                        {{ Str::limit($task->category->name, 55) }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                         <span
@@ -96,6 +96,15 @@
                         </span>
                     </td>
                     <td class="px-3 py-4 flex space-x-2">
+                        <a href="{{ route('tasks.show', $task->id) }}">
+                            <svg class="w-6 h-6 text-gray-800 dark:text-gray-50 hover:text-primary-700"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke="currentColor" stroke-width="2"
+                                    d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                <path stroke="currentColor" stroke-width="2" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+                        </a>
                         <a href="{{ route('tasks.edit', $task->id) }}">
                             <svg class="w-6 h-6 text-gray-800 dark:text-gray-50 hover:text-primary-700"
                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"

@@ -11,8 +11,8 @@
         </x-slot:header>
     </x-header-task>
 
-    <div class="relative shadow py-4 sm:rounded-lg dark:shadow-gray-800 bg-white dark:bg-gray-800">
-        <form class="max-w-full mx-6" action="{{ route('tasks.store') }}" method="POST">
+    <div class="relative shadow sm:rounded-lg dark:shadow-gray-800 bg-white dark:bg-gray-800">
+        <form class="max-w-full p-4 sm:p-8" action="{{ route('tasks.store') }}" method="POST">
             @csrf
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="relative w-full space-y-5">

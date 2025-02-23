@@ -6,13 +6,13 @@
     <x-header-task>
         <x-slot:header>
             <span class="text-xl font-bold text-left dark:text-gray-50">
-                Edit Task {{ $task->title }}
+                Task: {{ $task->title }}
             </span>
         </x-slot:header>
     </x-header-task>
 
-    <div class="relative shadow py-4 sm:rounded-lg dark:shadow-gray-800 bg-white dark:bg-gray-800">
-        <form class="max-w-full mx-6" action="{{ route('tasks.update', $task->id) }}" method="POST">
+    <div class="relative shadow sm:rounded-lg dark:shadow-gray-800 bg-white dark:bg-gray-800">
+        <form class="max-w-full p-4 sm:p-8" action="{{ route('tasks.update', $task->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
