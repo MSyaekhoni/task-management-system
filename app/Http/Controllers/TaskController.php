@@ -21,8 +21,14 @@ class TaskController extends Controller
         if ($request->has('search')) {
             $searchTerm = '%' . $request->search . '%';
             $query->where('title', 'like', $searchTerm)
+                ->orWhereHas('creator', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', $searchTerm);
+                })
                 ->orWhere('description', 'like', $searchTerm)
                 ->orWhereHas('category', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', $searchTerm);
+                })
+                ->orWhereHas('priority', function ($q) use ($searchTerm) {
                     $q->where('name', 'like', $searchTerm);
                 })
                 ->orWhereHas('status', function ($q) use ($searchTerm) {
