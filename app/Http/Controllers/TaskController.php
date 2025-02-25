@@ -52,9 +52,29 @@ class TaskController extends Controller
             }
         }
 
+        // filter priority & status pada tabel tasks
+        $filtersPriority = $request->get('filter_priority', []);
+        $filtersStatus = $request->get('filter_status', []);
+
+        // Konversi ke Integer
+        $filtersPriority = array_map('intval', $filtersPriority);
+        $filtersStatus = array_map('intval', $filtersStatus);
+
+        // Jika ada filter Prioirity, tambahkan kondisi whereIn
+        if (!empty($filtersPriority)) {
+            $query->whereIn('priority_id', $filtersPriority);
+        }
+
+        // Jika ada filter Status, tambahkan kondisi whereIn
+        if (!empty($filtersStatus)) {
+            $query->whereIn('status_id', $filtersStatus);
+        }
+
+        $priorities = PriorityTask::all();
+        $statuses = StatusTask::all();
         $tasks = $query->latest()->paginate(5)->withQueryString();
 
-        return view('tasks.index', compact('tasks'));
+        return view('tasks.index', compact('tasks', 'priorities', 'statuses'));
     }
 
     public function create()
