@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('category_id')->constrained(
                 table: 'category_tasks',
                 indexName: 'category_task_id'
-            );
+            )->onDelete('cascade');
             $table->foreignId('priority_id')->constrained(
                 table: 'priority_tasks',
                 indexName: 'priority_task_id'

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Task;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Message;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,5 +52,10 @@ class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'creator_id');
+    }
+
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'creator_id');
     }
 }

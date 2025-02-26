@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
@@ -17,9 +18,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('tasks', TaskController::class);
 
-    Route::get('/messages', function () {
-        return view('messages');
-    });
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy'])->name('messages.destroy');
 });
 
 

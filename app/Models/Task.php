@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\CategoryTask;
 use App\Models\PriorityTask;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -40,12 +41,28 @@ class Task extends Model
         return $this->belongsTo(StatusTask::class);
     }
 
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'task_id');
+    }
+
     public static function boot()
     {
         parent::boot();
 
+        // Memanggil method generate slug
         static::creating(function ($task) {
             $task->slug = self::generateUniqueSlug($task->title);
+        });
+
+        // Membuat data kategori yang sudah tidak terpakai terhapus otomatis-onDelete('Cascade')
+        static::deleting(function ($task) {
+            $category = $task->category;
+
+            // Cek jika tidak ada task lain yang menggunakan kategori ini
+            if ($category && $category->tasks()->count() == 1) {
+                $category->delete();
+            }
         });
     }
 

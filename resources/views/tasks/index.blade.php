@@ -112,7 +112,7 @@
                 </thead>
                 <tbody>
                     @forelse ($tasks as $task)
-                    <tr class="border-b dark:border-gray-700">
+                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
                         <th scope="row" class="px-4 py-3 font-medium text-gray-900 dark:text-white">
                             {{ Str::limit($task->title, 55) }}
                         </th>
