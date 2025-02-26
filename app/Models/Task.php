@@ -72,4 +72,9 @@ class Task extends Model
         $count = self::where('slug', 'LIKE', "{$slug}%")->count();
         return $count ? "{$slug}-" . ($count + 1) : $slug;
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 }

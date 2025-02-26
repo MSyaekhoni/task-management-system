@@ -28,7 +28,9 @@ class SendTaskReminders extends Command
      */
     public function handle()
     {
-        $tasks = Task::where('due_date', '<=', Carbon::now()->addDay())->get();
+        $tasks = Task::where('due_date', '>=', Carbon::now())
+            ->where('status_id', '!=', 3)
+            ->get();
 
         foreach ($tasks as $task) {
             $dueDate = Carbon::parse($task->due_date); // Konversi ke Carbon

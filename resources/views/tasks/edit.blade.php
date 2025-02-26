@@ -12,7 +12,7 @@
     </x-header-task>
 
     <div class="relative shadow sm:rounded-lg dark:shadow-gray-800 bg-white dark:bg-gray-800">
-        <form class="max-w-full p-4 sm:p-8" action="{{ route('tasks.update', $task->id) }}" method="POST">
+        <form class="max-w-full p-4 sm:p-8" action="{{ route('tasks.update', $task) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

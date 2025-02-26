@@ -23,17 +23,17 @@
 
     <div class="bg-white dark:bg-gray-800 p-6 relative shadow-md sm:rounded-lg overflow-auto">
         <ul>
-            @foreach($messages as $message)
+            @forelse($messages as $message)
             <li>
                 <div class="flex items-center gap-4 border-b-2 dark:border-gray-700 py-2 dark:text-gray-50">
                     <div class="w-12 justify-items-center flex-none border-r-2 dark:border-gray-700">
                         <form
                             action="{{ route('messages.destroy', ['message' => $message, 'page' => request('page')]) }}"
-                            method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesan ini?');">
+                            method="POST" onsubmit="return confirm('Are you sure to delete this message?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit">
-                                <svg class="w-6 h-6 text-gray-800 dark:text-gray-50 hover:text-red-700"
+                                <svg class="w-6 h-6 text-gray-800 dark:text-gray-50 hover:text-red-700 dark:hover:text-red-700"
                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -64,7 +64,11 @@
                     </div>
                 </div>
             </li>
-            @endforeach
+            @empty
+            <div class="flex justify-center">
+                <span class="flex-none dark:text-gray-50">No message 😊</span>
+            </div>
+            @endforelse
         </ul>
         <div class="my-4 mx-4">
             {{ $messages->links() }}

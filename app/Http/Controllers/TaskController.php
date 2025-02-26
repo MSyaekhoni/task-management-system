@@ -102,16 +102,16 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', 'New task added successfully!');
     }
 
-    public function show($id)
+    public function show(Task $task)
     {
-        $task = Task::findOrFail($id);
+        // $task = Task::findOrFail($id);
 
         return view('tasks.show', compact('task'));
     }
 
-    public function edit($id)
+    public function edit(Task $task)
     {
-        $task = Task::findOrFail($id);
+        // $task = Task::findOrFail($id);
         $categories = CategoryTask::all();
         $priorities = PriorityTask::all();
         $statuses = StatusTask::all();
@@ -142,11 +142,24 @@ class TaskController extends Controller
         return redirect()->route('tasks.index')->with('success', "$task->title Task updated successfully!");
     }
 
-    public function destroy($id)
+    public function destroy(Request $request, Task $task)
     {
-        $task = Task::findOrFail($id);
+        // Tangkap halaman saat ini
+        $currentPage = $request->query('page', 1);
+
+        // $task = Task::findOrFail($id);
         $task->delete();
 
-        return redirect()->route('tasks.index')->with('success', 'Task deleted successfully!');
+        // Hitung ulang task setelah dihapus
+        $totalTask = Task::count();
+        $taskPerPage = 5;
+
+        // Hitung halaman terakhir yang tersedia
+        $lastPage = ceil($totalTask / $taskPerPage);
+
+        // Redirect ke Halaman yang valid (jika halaman terakhir kosong kembali ke halaman awal)
+        $redirectPage = min($currentPage, $lastPage);
+
+        return redirect()->route('tasks.index', ['page' => $redirectPage])->with('success', 'Task deleted successfully!');
     }
 }

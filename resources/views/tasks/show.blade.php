@@ -52,11 +52,11 @@
                 <x-secondary-link-button href="{{ route('tasks.index') }}">
                     {{ __('Back') }}
                 </x-secondary-link-button>
-                <x-primary-link-button href="{{ route('tasks.edit', $task->id) }}">
+                <x-primary-link-button href="{{ route('tasks.edit', $task) }}">
                     {{ __('Edit') }}
                 </x-primary-link-button>
-                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
-                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus tugas ini?');">
+                <form action="{{ route('tasks.destroy', $task) }}" method="POST"
+                    onsubmit="return confirm('Are you sure to delete this task?');">
                     @csrf
                     @method('DELETE')
                     <x-danger-button>

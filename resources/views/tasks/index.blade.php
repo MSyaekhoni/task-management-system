@@ -155,17 +155,18 @@
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
                                     aria-labelledby="{{ $task->slug }}-dropdown-button">
                                     <li>
-                                        <a href="{{ route('tasks.show', $task->id) }}"
+                                        <a href="{{ route('tasks.show', $task) }}"
                                             class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('tasks.edit', $task->id) }}"
+                                        <a href="{{ route('tasks.edit', $task) }}"
                                             class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
                                     </li>
                                 </ul>
                                 <div class="py-1">
-                                    <form action="{{ route('tasks.destroy', $task->id) }}" method="POST"
-                                        onsubmit="return confirm('Apakah Anda yakin ingin menghapus tugas ini?');">
+                                    <form
+                                        action="{{ route('tasks.destroy', ['task' => $task, 'page' => request('page')]) }}"
+                                        method="POST" onsubmit="return confirm('Are you sure to delete this task?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
