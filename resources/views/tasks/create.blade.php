@@ -158,11 +158,11 @@
                 .select2-selection__clear {
                     font-size: 20px;
                     margin-left: 10px;
-                    color: #3e35d4;
+                    color: red;
                 }
 
                 .select2-selection__clear:hover {
-                    color: darkblue;
+                    color: darkred;
                     /* Warna saat hover */
                 }
 
