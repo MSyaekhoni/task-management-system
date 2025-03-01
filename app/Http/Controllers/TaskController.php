@@ -99,7 +99,7 @@ class TaskController extends Controller
             ]
         ));
 
-        return redirect()->route('tasks.index')->with('success', 'New task added successfully!');
+        return redirect()->route('tasks.index')->with('success', 'New task added successfully.');
     }
 
     public function show(Task $task)
@@ -139,7 +139,7 @@ class TaskController extends Controller
             ]
         ));
 
-        return redirect()->route('tasks.index')->with('success', "$task->title Task updated successfully!");
+        return redirect()->route('tasks.index')->with('success', "$task->title Task updated successfully.");
     }
 
     public function destroy(Request $request, Task $task)
@@ -160,6 +160,28 @@ class TaskController extends Controller
         // Redirect ke Halaman yang valid (jika halaman terakhir kosong kembali ke halaman awal)
         $redirectPage = min($currentPage, $lastPage);
 
-        return redirect()->route('tasks.index', ['page' => $redirectPage])->with('success', 'Task deleted successfully!');
+        return redirect()->route('tasks.index', ['page' => $redirectPage])->with('success', 'Task deleted successfully.');
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $currentPage = request('page', 1);
+
+        $request->validate([
+            'task_ids' => 'required|array',
+            'task_ids.*' => 'exists:tasks,id'
+        ]);
+
+        Task::whereIn('id', $request->task_ids)->delete();
+
+        // Cek apakah di currentPage masih ada task
+        $remainingTask = Task::paginate(5);
+
+        // Jika sudah tidak ada task dicurrentPage, redirect ke halaman sebelumnya
+        if ($remainingTask->isEmpty() && $currentPage > 1) {
+            $currentPage--;
+        }
+
+        return redirect()->route('tasks.index', ['page' => $currentPage])->with('success', 'Selected tasks deleted successfully');
     }
 }

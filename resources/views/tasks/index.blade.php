@@ -29,6 +29,9 @@
     <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
         <div class="w-full flex p-4 items-center justify-end">
             <div class="flex items-center space-x-3 w-auto">
+                <x-danger-button id="delete-selected" form="delete-form" style="display: none">
+                    Delete Selected
+                </x-danger-button>
                 <x-primary-link-button href="{{ route('tasks.create') }}">
                     {{ __('Add new task') }}
                 </x-primary-link-button>
@@ -94,103 +97,161 @@
                 </div>
             </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-4 py-3">Title</th>
-                        <th scope="col" class="px-4 py-3">Creator</th>
-                        <th scope="col" class="px-4 py-3">Description</th>
-                        <th scope="col" class="px-4 py-3">Category</th>
-                        <th scope="col" class="px-4 py-3">Priority</th>
-                        <th scope="col" class="px-4 py-3">Status</th>
-                        <th scope="col" class="px-4 py-3">Due Date</th>
-                        <th scope="col" class="px-4 py-3">
-                            <span class="sr-only">Actions</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($tasks as $task)
-                    <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
-                        <th scope="row" class="px-4 py-3 font-medium text-gray-900 dark:text-white">
-                            {{ Str::limit($task->title, 55) }}
-                        </th>
-                        <td class="px-4 py-3">{{ Str::limit($task->creator->name, 55) }}</td>
-                        <td class="px-4 py-3">{{ Str::limit($task->description, 55) }}</td>
-                        <td class="px-4 py-3">{{ Str::limit($task->category->name, 55) }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span
-                                class="bg-{{ $task->priority->color }}-500 rounded-md block w-16 text-center text-white font-medium">
-                                {{ $task->priority->name }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap flex items-center gap-2">
-                            <span class="bg-{{ $task->status->color }}-500 w-3 h-3 rounded-full block"></span>
-                            <span class="block">
-                                {{ $task->status->name }}
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="block">
-                                {{ Carbon\Carbon::parse($task->due_date)->format('d M Y') }}
-                            </span>
-                            <span class="block">
-                                {{ Carbon\Carbon::parse($task->due_date)->format('H:i') }}
-                            </span>
-                        </td>
-                        <td class="px-4 py-3 flex items-center justify-end">
-                            <button id="{{ $task->slug }}-dropdown-button"
-                                data-dropdown-toggle="{{ $task->slug }}-dropdown"
-                                class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
-                                type="button">
-                                <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                </svg>
-                            </button>
-                            <div id="{{ $task->slug }}-dropdown"
-                                class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                                    aria-labelledby="{{ $task->slug }}-dropdown-button">
-                                    <li>
-                                        <a href="{{ route('tasks.show', $task) }}"
-                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('tasks.edit', $task) }}"
-                                            class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                    </li>
-                                </ul>
-                                <div class="py-1">
-                                    <form
-                                        action="{{ route('tasks.destroy', ['task' => $task, 'page' => request('page')]) }}"
-                                        method="POST" onsubmit="return confirm('Are you sure to delete this task?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="block w-full text-left py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</button>
-                                    </form>
+        {{-- Form bulk-delete --}}
+        <form id="delete-form" action="{{ route('tasks.bulkDelete') }}" method="POST"
+            onsubmit="return confirm('Are you sure to delete this task?');">
+            @csrf
+            @method('DELETE')
+
+            <input type="hidden" name="page" value="{{ request('page', 1) }}">
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                            <th scope="col" class="pl-4 pr-2 py-3">
+                                <input type="checkbox" id="select-all">
+                            </th>
+                            <th scope="col" class="px-4 py-3">Title</th>
+                            <th scope="col" class="px-4 py-3">Creator</th>
+                            <th scope="col" class="px-4 py-3">Description</th>
+                            <th scope="col" class="px-4 py-3">Category</th>
+                            <th scope="col" class="px-4 py-3">Priority</th>
+                            <th scope="col" class="px-4 py-3">Status</th>
+                            <th scope="col" class="px-4 py-3">Due Date</th>
+                            <th scope="col" class="px-4 py-3">
+                                <span class="sr-only">Actions</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($tasks as $task)
+                        <tr class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <th scope="row" class="pl-4 pr-2 py-3">
+                                <input type="checkbox" class="task-checkbox" name="task_ids[]" value="{{ $task->id }}">
+                            </th>
+                            <th scope="row" class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                                {{ Str::limit($task->title, 35) }}
+                            </th>
+                            <td class="px-4 py-3">{{ Str::limit($task->creator->name, 35) }}</td>
+                            <td class="px-4 py-3">{{ Str::limit($task->description, 35) }}</td>
+                            <td class="px-4 py-3">{{ Str::limit($task->category->name, 35) }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="bg-{{ $task->priority->color }}-500 rounded-md block w-16 text-center text-white font-medium">
+                                    {{ $task->priority->name }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap flex-wrap items-center space-x-2">
+                                <span
+                                    class="bg-{{ $task->status->color }}-500 w-3 h-3 rounded-full inline-block"></span>
+                                <span class=" inline-block">
+                                    {{ $task->status->name }}
+                                </span>
+                            </td>
+                            <td class=" px-6 py-4 whitespace-nowrap flex-nowrap items-center">
+                                <span class="block">
+                                    {{ Carbon\Carbon::parse($task->due_date)->format('d M Y') }}
+                                </span>
+                                <span class="block">
+                                    {{ Carbon\Carbon::parse($task->due_date)->format('H:i') }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 align-middle text-center whitespace-nowrap">
+                                <div class="flex items-center justify-center space-x-2">
+                                    <a href="{{ route('tasks.show', $task) }}">
+                                        <svg class="w-6 h-6 text-gray-800 dark:text-gray-50 hover:text-primary-700 dark:hover:text-primary-600"
+                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-width="2"
+                                                d="M21 12c0 1.2-4.03 6-9 6s-9-4.8-9-6c0-1.2 4.03-6 9-6s9 4.8 9 6Z" />
+                                            <path stroke="currentColor" stroke-width="2"
+                                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                        </svg>
+                                    </a>
+                                    <a href="{{ route('tasks.edit', $task) }}">
+                                        <svg class="w-6 h-6 text-gray-800 dark:text-gray-50 hover:text-green-700 dark:hover:text-green-600"
+                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
+                                        </svg>
+                                    </a>
+                                    <button type="button" data-id="{{ $task->slug }}" class="delete-task">
+                                        <svg class="w-6 h-6 text-gray-800 dark:text-gray-50 hover:text-red-700 dark:hover:text-red-600"
+                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                        </svg>
+                                    </button>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" class="text-center py-4">
-                            <p class="font-medium text-base mb-4">Task not found!</p>
-                            <x-secondary-link-button href="{{ route('tasks.index') }}">
-                                {{ __('Back to All Tasks') }}
-                            </x-secondary-link-button>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <p class="font-medium text-base mb-4">Task not found!</p>
+                                <x-secondary-link-button href="{{ route('tasks.index') }}">
+                                    {{ __('Back to All Tasks') }}
+                                </x-secondary-link-button>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        {{-- Form delete single task --}}
+        <form id="delete-task-form" method="POST" style="display: none">
+            @csrf
+            @method('DELETE')
+        </form>
         <div class="my-4 mx-4">
             {{ $tasks->links() }}
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Bulk-Delete
+            let selectAll = document.getElementById('select-all');
+            let checkboxes = document.querySelectorAll('.task-checkbox');
+            let deleteButton = document.getElementById('delete-selected');
+
+            // Cek jika ada checkbox yang di-select
+            function toggleDeleteButton() {
+                let anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+                deleteButton.style.display = anyChecked ? 'block' : 'none';
+            }
+
+            // Select or Deselect checkboxes
+            selectAll.addEventListener('change', function() {
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                });
+                toggleDeleteButton();
+            })
+
+            // Check individually and toggle delete button
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', toggleDeleteButton);
+            });
+
+            // Delete single task
+            document.querySelectorAll(".delete-task").forEach(button => {
+                button.addEventListener("click", function() {
+                    let taskId = this.getAttribute("data-id");
+                    let currentPage = new URLSearchParams(window.location.search).get("page") || 1;
+
+                    if(confirm("Are you sure to delete this task?")) {
+                        let form = document.getElementById("delete-task-form");
+                        form.action = `/tasks/${taskId}?page=${currentPage}`;
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 </x-layout>

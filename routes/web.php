@@ -15,6 +15,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::delete('/tasks/bulk-delete', [TaskController::class, 'bulkDelete'])->name('tasks.bulkDelete');
     Route::resource('tasks', TaskController::class);
     Route::delete('/messages/bulk-delete', [MessageController::class, 'bulkDelete'])->name('messages.bulkDelete');
     Route::resource('messages', MessageController::class)->only('index', 'destroy');

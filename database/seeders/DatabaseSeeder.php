@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
         $this->call([StatusTaskSeeder::class]);
 
         $admin = User::create([
-            'name' => 'admin',
+            'name' => 'Mantan Intel',
             'email' => 'admin@admin.com',
-            'password' => bcrypt('password123')
+            'password' => bcrypt('pass1234')
         ]);
 
-        Task::factory(10)->recycle([
-            User::factory(3)->create(),
+        Task::factory(50)->recycle([
+            User::factory(6)->create(),
             $admin,
             CategoryTask::factory(4)->create(),
             PriorityTask::all(),

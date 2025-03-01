@@ -75,10 +75,13 @@
                                     </svg>
                                 </button>
                             </td>
-                            <td class="px-4 py-3 lg:flex lg:gap-2">
+                            <td class="px-4 py-3 w-auto lg:flex lg:gap-2">
                                 <div
-                                    class="flex flex-none flex-col lg:justify-center lg:pr-2 lg:border-r dark:lg:border-gray-700">
-                                    <span class="flex-none">
+                                    class="flex flex-none flex-col lg:w-72 lg:justify-center lg:pr-2 lg:border-r dark:lg:border-gray-700">
+                                    <span class="flex-none hidden lg:inline">
+                                        Task: <strong>{{ Str::limit($message->task->title, 33) }}</strong>
+                                    </span>
+                                    <span class="flex-none lg:hidden">
                                         Task: <strong>{{ $message->task->title }}</strong>
                                     </span>
                                     <span class="flex-none">
